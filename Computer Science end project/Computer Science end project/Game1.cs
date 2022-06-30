@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Computer_Science_end_project
+namespace Project_end
 {
     public class Game1 : Game
     {
@@ -17,12 +17,13 @@ namespace Computer_Science_end_project
         Projectiles TheProjectiles;
         GameState gameState;
         Cursor TheCursor;
+        Maze mazeforfloor;
 
         RoomState roomState;
-       
-        
+
+
         SpriteFont GameFont;
-        int floor = 10;
+        int floor = 4;
 
 
 
@@ -45,13 +46,13 @@ namespace Computer_Science_end_project
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";           
+            Content.RootDirectory = "Content";
 
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;   // set this value to the desired width of your window
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;   // set this value to the desired height of your window
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-            
+
             roomState = RoomState.Combat;
             gameState = GameState.Menu;
 
@@ -72,10 +73,11 @@ namespace Computer_Science_end_project
             TheProjectiles = new Projectiles();
             TheCursor = new Cursor();
             Theenemies = new Enemies();
-            
+            mazeforfloor = new Maze(floor);
+
             base.Initialize();
-            
-    }
+
+        }
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -88,10 +90,10 @@ namespace Computer_Science_end_project
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ThebackgroundInGame.LoadContent(Content, "Background");
-            thePlayer.loadcontent(Content,"Mushroom Man");
+            thePlayer.loadcontent(Content, "Mushroom Man");
             BackgroundInMenu.LoadContent(Content, "BackgroundForMenu");
-            TheCursor.loadcontent(Content,"Mushroom Cursor");
-
+            TheCursor.loadcontent(Content, "Mushroom Cursor");
+            mazeforfloor.Loadcontent(Content);
             GameFont = Content.Load<SpriteFont>(@"MyFont");
 
             // TODO: use this.Content to load your game content here
@@ -118,25 +120,25 @@ namespace Computer_Science_end_project
                 Exit();
 
             // TODO: Add your update logic here
-            thePlayer.Update(gameTime,TheProjectiles, Content, thePlayer);
+            thePlayer.Update(gameTime, TheProjectiles, Content, thePlayer);
 
             TheCursor.update(gameTime, ref gameState);
 
-            foreach(Projectile projectile in TheProjectiles._Projectiles)
+            foreach (Projectile projectile in TheProjectiles._Projectiles)
             {
                 projectile.update(gameTime);
             }
 
             TheProjectiles._Projectiles = TheProjectiles._Projectiles.Where(x => !x.Isremoved).ToList();
-            
-            if(roomState == RoomState.Combat)
+
+            if (roomState == RoomState.Combat)
             {
 
-                Theenemies.addenemy(floor,Content,gameTime);
-                
+                Theenemies.addenemy(floor, Content, gameTime);
+
             }
 
-            foreach(Enemy enemy in Theenemies._Enemies)
+            foreach (Enemy enemy in Theenemies._Enemies)
             {
                 enemy.update(gameTime, thePlayer);
             }
@@ -165,15 +167,15 @@ namespace Computer_Science_end_project
                 if (gameState == GameState.Game)
                 {
                     ThebackgroundInGame.Draw(spriteBatch);
-                    
-                   foreach(Projectile projectile in TheProjectiles._Projectiles)
-                   {
-                        projectile.Draw(spriteBatch);
-                   }
-
-                    if(roomState == RoomState.Combat)
+                    mazeforfloor.draw(spriteBatch);
+                    foreach (Projectile projectile in TheProjectiles._Projectiles)
                     {
-                        foreach(Enemy enemy in Theenemies._Enemies)
+                        projectile.Draw(spriteBatch);
+                    }
+
+                    if (roomState == RoomState.Combat)
+                    {
+                        foreach (Enemy enemy in Theenemies._Enemies)
                         {
                             enemy.Draw(spriteBatch);
                         }
