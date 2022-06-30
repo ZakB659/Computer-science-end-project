@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 
-namespace Computer_Science_end_project
+namespace Project_end
 {
     class Projectiles
     {
@@ -21,12 +21,16 @@ namespace Computer_Science_end_project
 
         public List<Projectile> _Projectiles { get => projectiles; set => projectiles = value; }
 
-        public void addprojectiles(ContentManager content,Player Theplayer,Vector2 Movement)
+        public void addprojectiles(ContentManager content, Player Theplayer, Vector2 Movement,bool stationary)
         {
-            Projectile newprojectile = new Projectile(Theplayer,Movement);
-            newprojectile.loadcontent(content, "Fireball");           
+            if(stationary == true)
+            {
+                Movement = new Vector2(1*Theplayer._MovementSpeed, 0);
+            }
+            Projectile newprojectile = new Projectile(Theplayer, Movement);
+            newprojectile.loadcontent(content, "Fireball");
             _Projectiles.Add(newprojectile);
-            
+
         }
     }
 }
