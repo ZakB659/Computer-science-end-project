@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,9 +21,14 @@ namespace Computer_Science_end_project
         private bool movingroom;
         public int movinganimationX;
         public int movinganimationY;
+        private int shootingspeed;
+        private double timetowait;
+        public double Timewaited;
 
-        public Vector2 Movement1 { get => Movement; set => Movement = value; }
+        public Vector2 _Movement { get => Movement; set => Movement = value; }
         public direction _Direction { get => Direction; set => Direction = value; }
+        public int Shootingspeed { get => shootingspeed; set => shootingspeed = value; }
+        public double Timetowait { get => timetowait; set => timetowait = value; }
 
         public Player()
         {
@@ -33,6 +38,9 @@ namespace Computer_Science_end_project
             _Location = new Vector2(windowWidth/2, windowHeight/2);
             _MovementSpeed = 2;
             Health = 10;
+            Timetowait = 30;
+            Timewaited = 30;
+            shootingspeed = 1;
             movingroom = false;
         }
 
@@ -47,55 +55,49 @@ namespace Computer_Science_end_project
                 MoveroomAnimation();
             }
             else
-            {
-                foreach (Keys key in inputs)
+            {  
+                if (ks.IsKeyDown(Keys.W))
+                {                        
+                    Movement.Y = _MovementSpeed * (Movement.Y - 1);
+                    _Direction = direction.North;
+                    movinganimationX = 3;                        
+                }
+                if (ks.IsKeyDown(Keys.A))
                 {
-                    if (key == Keys.Space)
+                    Movement.X = _MovementSpeed * (Movement.X - 1);                        
+                    _Direction = direction.West;                       
+                    movinganimationX = 1;
+                }
+                if (ks.IsKeyDown(Keys.D))
+                {
+                    Movement.X = _MovementSpeed * (Movement.X + 1);                        
+                    _Direction = direction.East;                        
+                    movinganimationX = 2;
+                }
+                if (ks.IsKeyDown(Keys.S))
+                {
+                     _Direction = direction.South;                       
+                     Movement.Y = _MovementSpeed * (Movement.Y + 1);
+                     movinganimationX = 0;
+                }
+                if(ks.IsKeyDown(Keys.D & Keys.A)) { Movement.X = 0; movinganimationX = 0; _Direction = direction.None; }
+                if (ks.IsKeyDown(Keys.D & Keys.A)) { Movement.X = 0; movinganimationX = 0; _Direction = direction.None; }
+                if (ks.IsKeyDown(Keys.Space))
                     {
-                        Projectile newprojectile = new Projectile();
-                        newprojectile.loadcontent(content, "Fireball");
-                        newprojectile.setdirection(Theplayer);
-                        projectiles.addprojectiles(newprojectile);
-                    }
-                    if (key == Keys.W)
-                    {
-                        Movement.X = Movement.X + 0;
-                        Movement.Y = _MovementSpeed * (Movement.Y - 1);
-                        _Direction = direction.North;
-                        movinganimationY = 1;
-                        movinganimationX = 0;
-                    }
-                    if (key == Keys.A)
-                    {
-                        Movement.X = _MovementSpeed * (Movement.X - 1);
-                        Movement.Y = Movement.Y + 0;
-                        _Direction = direction.West;
-                        movinganimationY = 0;
-                        movinganimationX = 1;
-                    }
-                    if (key == Keys.D)
-                    {
-                        Movement.X = _MovementSpeed * (Movement.X + 1);
-                        Movement.Y = Movement.Y + 0;
-                        _Direction = direction.East;
-                        movinganimationY = 0;
-                        movinganimationX = 2;
-                    }
-                    if (key == Keys.S)
-                    {
-                        _Direction = direction.South;
-                        Movement.X = Movement.X + 0;
-                        Movement.Y = _MovementSpeed * (Movement.Y + 1);
-                        movinganimationY = 0;
-                        movinganimationX = 0;
+                        Timewaited++;
+
+                        if (Timewaited > Timetowait / shootingspeed)
+                        {
+
+                            projectiles.addprojectiles(content, Theplayer,_Movement);
+                            
+                            Timewaited = 0;
+                        }
                     }
 
-                    Roomchange.Y = 0;
-                    Roomchange.X = 0;
 
                     _Location = _Location + Movement;
-                    Movement.X = 0;
-                    Movement.Y = 0;
+                    
 
                     if (Math.Abs(windowWidth/2 - _Location.X) < 150 && Math.Abs(0 - _Location.Y) < 30)
                     {
@@ -118,7 +120,9 @@ namespace Computer_Science_end_project
                         MoveroomAnimation();
                     }
 
-                }
+                
+                Movement.X = 0;
+                Movement.Y = 0;
             }           
         }
 
