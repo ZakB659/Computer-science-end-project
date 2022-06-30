@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,14 +21,12 @@ namespace Computer_Science_end_project
 
         public List<Projectile> _Projectiles { get => projectiles; set => projectiles = value; }
 
-        public void addprojectiles(Projectile projectile)
+        public void addprojectiles(ContentManager content,Player Theplayer,Vector2 Movement)
         {
-            _Projectiles.Add(projectile);
-        }
-
-        public void removeprojectiles()
-        {
-
+            Projectile newprojectile = new Projectile(Theplayer,Movement);
+            newprojectile.loadcontent(content, "Fireball");           
+            _Projectiles.Add(newprojectile);
+            
         }
     }
 }
