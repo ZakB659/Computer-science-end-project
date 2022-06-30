@@ -12,17 +12,25 @@ namespace Computer_Science_end_project
 {
     class Projectile : Charachter
     {
+        private int windowWidth;
+        private int windowHeight;
         private Vector2 ForOutOfPlayer;
         private direction direction;
         private Vector2 movement;
-       
+        private bool isremoved;
+        private Keys[] inputs = new Keys[100];
+
 
         public direction Direction { get => direction; set => direction = value; }
         public Vector2 Movement { get => movement; set => movement = value; }
+        public bool Isremoved { get => isremoved; set => isremoved = value; }
 
-        public Projectile()
+        public Projectile(Player player,Vector2 Movement)
         {
-            
+            windowWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            windowHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _Location = player._Location;
+            movement = Movement;
         }
 
         public override void loadcontent(ContentManager content,string name)
@@ -33,49 +41,18 @@ namespace Computer_Science_end_project
         public void update(GameTime gameTime)
         {
             _Location = _Location + movement;
-        }
-
-        public void setdirection(Player player)
-        {
-
-            switch (player._Direction)
-            {
-                case direction.North:
-                    ForOutOfPlayer.X = 0;
-                    ForOutOfPlayer.Y = -100;
-                    movement.X = 0;
-                    movement.Y = -3;
-                    break;
-                case direction.East:
-                    ForOutOfPlayer.X = 50;
-                    ForOutOfPlayer.Y = 0;
-                    movement.X = 3;
-                    movement.Y = 0;
-                    break;
-                case direction.South:
-                    ForOutOfPlayer.X = 0;
-                    ForOutOfPlayer.Y = 100;
-                    movement.X = 0;
-                    movement.Y = 3;
-                    break;
-                case direction.West:
-                    ForOutOfPlayer.X = -50;
-                    ForOutOfPlayer.Y = 0;
-                    movement.X = -3;
-                    movement.Y = 0;
-                    break;
-            }
-           
-            _Location = player._Location + ForOutOfPlayer;
-            
-        }
+        }      
 
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if((_Location.X < 1920 || _Location.X > 0) && (_Location.Y < 1080 || _Location.Y > 0))
+            if ((_Location.X < windowWidth && _Location.X > 0) && (_Location.Y < windowHeight && _Location.Y > 0))
             {
                 spriteBatch.Draw(_Texture, _Location, new Rectangle(0, 0, 100, 100), Color.White,0,new Vector2(0,0),3,SpriteEffects.None,0);
+            }
+            else
+            {
+                Isremoved = true;
             }
             
         }
