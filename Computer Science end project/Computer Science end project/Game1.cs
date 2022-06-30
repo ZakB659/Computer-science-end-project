@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Computer_Science_end_project
 {
@@ -12,9 +14,10 @@ namespace Computer_Science_end_project
         SpriteBatch spriteBatch;
         Background BackgroundInMenu;
         Background ThebackgroundInGame;
-        Projectiles Projectiles;
+        Projectiles TheProjectiles;
         GameState gameState;
         Cursor TheCursor;
+
         RoomState roomState;
        
         
@@ -66,7 +69,7 @@ namespace Computer_Science_end_project
             ThebackgroundInGame = new Background();
             BackgroundInMenu = new Background();
             thePlayer = new Player();
-            Projectiles = new Projectiles();
+            TheProjectiles = new Projectiles();
             TheCursor = new Cursor();
             Theenemies = new Enemies();
             
@@ -115,17 +118,18 @@ namespace Computer_Science_end_project
                 Exit();
 
             // TODO: Add your update logic here
-            thePlayer.Update(gameTime,Projectiles, Content, thePlayer);
+            thePlayer.Update(gameTime,TheProjectiles, Content, thePlayer);
 
             TheCursor.update(gameTime, ref gameState);
 
-            foreach(Projectile projectile in Projectiles._Projectiles)
+            foreach(Projectile projectile in TheProjectiles._Projectiles)
             {
                 projectile.update(gameTime);
             }
 
+            TheProjectiles._Projectiles = TheProjectiles._Projectiles.Where(x => !x.Isremoved).ToList();
             
-            if(roomState == RoomState.Combat  )
+            if(roomState == RoomState.Combat)
             {
 
                 Theenemies.addenemy(floor,Content,gameTime);
@@ -162,7 +166,7 @@ namespace Computer_Science_end_project
                 {
                     ThebackgroundInGame.Draw(spriteBatch);
                     
-                   foreach(Projectile projectile in Projectiles._Projectiles)
+                   foreach(Projectile projectile in TheProjectiles._Projectiles)
                    {
                         projectile.Draw(spriteBatch);
                    }
@@ -189,3 +193,4 @@ namespace Computer_Science_end_project
         }
     }
 }
+
