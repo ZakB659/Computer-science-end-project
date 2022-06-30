@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
+
+namespace Computer_Science_end_project
+{
+    class Maze
+    {
+        private int[,] Mazegenerated;
+        Tuple<int, int> startposition = new Tuple<int, int>(0, 1);
+
+        public int[,] _Mazegenerated { get => Mazegenerated; set => Mazegenerated = value; }
+
+        public Maze(int floor)
+        {
+            switch (floor)
+            {
+                case 4:
+
+                    break;
+                case 8:
+
+                    break;
+                case 10:
+
+                    break;
+                default:
+                    Mazegenerated = new int[2*floor + 7, 7];
+                    break;
+            }
+
+            
+        }
+
+        public void FillMaze(int[,] Mazegenerated)
+        {
+            for (int u = 0; u < Mazegenerated.GetLength(1)-1; u=u+2)
+            {
+                for (int i = 0; i < Mazegenerated.GetLength(0); i=i+2)
+                {
+                    Mazegenerated[i+1, u] = 1;
+                    Mazegenerated[i, u] = 1;
+                    Mazegenerated[i + 1, u+1] = 0;
+                    Mazegenerated[i, u+1] = 1;
+                }
+            }
+            
+        }
+
+        public void draw(SpriteBatch spriteBatch)
+        {
+
+        }
+    }
+}
