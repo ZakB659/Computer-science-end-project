@@ -8,54 +8,88 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 
-namespace Computer_Science_end_project
+namespace Project_end
 {
     class Maze
     {
         private int[,] Mazegenerated;
-        Tuple<int, int> startposition = new Tuple<int, int>(0, 1);
+        public Vector2 Location;
+        public Vector2 startlocation = new Vector2(2,4);
+        public Stack<Vector2> Positions;
+        public Texture2D Emptytexture;
+        public Texture2D Walltexture;
 
         public int[,] _Mazegenerated { get => Mazegenerated; set => Mazegenerated = value; }
 
         public Maze(int floor)
         {
-            switch (floor)
-            {
-                case 4:
-
-                    break;
-                case 8:
-
-                    break;
-                case 10:
-
-                    break;
-                default:
-                    Mazegenerated = new int[2*floor + 7, 7];
-                    break;
-            }
-
-            
+            Mazegenerated = new int[2 * floor + 7, 7];
+            FillMaze();
+            generatemaze();
         }
 
-        public void FillMaze(int[,] Mazegenerated)
+        public void Loadcontent(ContentManager content)
         {
-            for (int u = 0; u < Mazegenerated.GetLength(1)-1; u=u+2)
+            Walltexture = content.Load<Texture2D>(@"Wall");
+            Emptytexture = content.Load<Texture2D>(@"Maze Corridor");
+        }
+
+        public void FillMaze()
+        {
+            for (int u = 0; u < Mazegenerated.GetLength(1) ; u++)
             {
-                for (int i = 0; i < Mazegenerated.GetLength(0); i=i+2)
+                for (int i = 0; i < Mazegenerated.GetLength(0); i++)
                 {
-                    Mazegenerated[i+1, u] = 1;
-                    Mazegenerated[i, u] = 1;
-                    Mazegenerated[i + 1, u+1] = 0;
-                    Mazegenerated[i, u+1] = 1;
-                }
+                    if (u % 2 == 0)
+                    {
+                        Mazegenerated[i, u] = 1;
+                    }
+                    else
+                    {
+                        if(i%2 == 0)
+                        {
+                            Mazegenerated[i, u] = 1;
+                        }
+                        else
+                        {
+                            Mazegenerated[i, u] = 0;
+                        }
+                    }                    
+                }                
             }
+        }
+
+        public void generatemaze()
+        {
+
+        }
+
+        public void checkneighbours(Vector2 Position)
+        {
             
         }
+
+
 
         public void draw(SpriteBatch spriteBatch)
         {
+            for (int u = 0; u < Mazegenerated.GetLength(1); u++)
+            {
+                for (int i = 0; i < Mazegenerated.GetLength(0); i++)
+                {
+                    Location = new Vector2(100 + 10 * i, u * 10);
+                    if (Mazegenerated[i,u] == 1)
+                    {                        
+                        spriteBatch.Draw(Walltexture, Location, new Rectangle(0, 0, 10, 10), Color.White); 
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(Emptytexture, Location, new Rectangle(0, 0, 10, 10), Color.White);
+                    }
+                }
+            }
 
+            
         }
     }
 }
